@@ -1,0 +1,190 @@
+{
+  "name": "Scheduled Google Sheets data backup to Google Drive",
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {}
+          ]
+        }
+      },
+      "id": "3f9bf94e-b397-4d5d-ab52-9bc6d32f3da6",
+      "name": "Daily Backup Schedule (2 AM)",
+      "type": "n8n-nodes-base.cron",
+      "position": [
+        -304,
+        208
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ZDH6pNhZj9tW54emdYMvxkJ7RZZmRgNJMmSjwRveVU0",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1843362028,
+          "mode": "list",
+          "cachedResultName": "Clients",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZDH6pNhZj9tW54emdYMvxkJ7RZZmRgNJMmSjwRveVU0/edit#gid=1843362028"
+        },
+        "options": {}
+      },
+      "id": "53094dae-eeda-4546-87cf-923c00442d3b",
+      "name": "Read Google Sheet Data",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        128,
+        208
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ebPeCzt7BrKe02Qo",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "fileName": "=backup_Sheet1_{{ $now.toFormat('yyyy-MM-dd_HH-mm-ss') }}.csv",
+          "headerRow": true
+        }
+      },
+      "id": "2dac3f37-21b7-4377-867b-7f30bcf167f8",
+      "name": "Convert Sheet Data to CSV",
+      "type": "n8n-nodes-base.convertToFile",
+      "position": [
+        352,
+        208
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "name": "={{ $binary.data.fileName }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1rJ7KQ2NbZs-wKL16Zf19gq6ZPhoAq2Ph",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "f6d108d8-568c-44a9-bb08-f64e99a46567",
+      "name": "Upload Backup to Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        576,
+        208
+      ],
+      "typeVersion": 3,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0ayR7a3A94jDRyNi",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Setup Steps\n\nTo get this workflow up and running, follow these instructions:\n\nStep 1: Create Google Sheets and Google Drive Credentials in n8n\n\nIn your n8n instance, go to Credentials in the left sidebar.\n\nEnsure you have a \"Google Sheets OAuth2 API\" credential set up. If not, create one.\n\nEnsure you have a \"Google Drive OAuth2 API\" credential set up. If not, create one.\n\nMake note of their Credential Names.\n\nStep 2: Prepare Your Google Sheet and Drive Folder\n\nSource Google Sheet: Identify the Google Sheet you want to back up. Copy its Document ID (from the URL). Note the Sheet Name (or GID) of the specific tab you want to back up.\n\nDestination Google Drive Folder: Go to your Google Drive (drive.google.com). Create a new folder for your backups (e.g., Google Sheets Backups). Copy the Folder ID from its URL.\n\n",
+        "height": 720
+      },
+      "id": "f644e985-2dbe-43ed-98d3-8934e84c86c8",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        512,
+        -192
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Configure the Nodes\n\n\nRead Google Sheet Data Node:\n\nSelect your Google Sheets credential.\n\nReplace YOUR_SOURCE_GOOGLE_SHEET_ID with the ID of the Google Sheet you want to back up.\n\nReplace Sheet1 with the exact name of the tab you want to back up.\n\nConvert Sheet Data to CSV Node:\n\nThis node converts the Google Sheets rows into a CSV binary file in the data field. The file name includes the execution timestamp.\n\nUpload Backup to Google Drive Node:\n\nSelect your Google Drive credential.\n\nReplace YOUR_DESTINATION_GOOGLE_DRIVE_FOLDER_ID with the ID of the Google Drive folder where you want to store backups.\n\nThe upload node reads the binary file from the data field.\n\nStep 5: Activate and Test the Workflow\n\nClick the \"Activate\" toggle button.\n\nTo test immediately, click \"Execute Workflow\".\n\nCheck your Google Drive backup folder. A new file named something like backup_Sheet1_2025-07-26_02-00-00.csv should appear.\n\n",
+        "height": 688
+      },
+      "id": "e98dc8de-6dff-43be-96d9-bf7307b1055a",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -560,
+        -144
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Scheduled Google Sheets Data Backup to Google Drive\n\n**Author:  David Olusola** \nThis workflow regularly backs up a Google Sheet by exporting its data and saving it as a new file (CSV or XLSX) in a specified folder within your Google Drive. This ensures data redundancy and historical versions.\n\nUse Case: Critical business data backup, audit trails, historical data snapshots.",
+        "height": 416
+      },
+      "id": "69e4bb9b-ca24-4148-bc10-d3ea1674f657",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -144,
+        -48
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Read Google Sheet Data": {
+      "main": [
+        [
+          {
+            "node": "Convert Sheet Data to CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Sheet Data to CSV": {
+      "main": [
+        [
+          {
+            "node": "Upload Backup to Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daily Backup Schedule (2 AM)": {
+      "main": [
+        [
+          {
+            "node": "Read Google Sheet Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "477268b6-a594-419a-9a7d-44a421c67ca6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "54c4244065b6b50af90fc1c926b2fe89ffb5dfd5eedfc9251462fa6e1246afa8"
+  },
+  "nodeGroups": [],
+  "id": "QFQSZQTk4IkFaR1n",
+  "tags": []
+}
