@@ -1,0 +1,508 @@
+{
+  "name": "Get started with Google Sheets in n8n",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "### 0️⃣ Prerequisites\n- **Google Sheets**\n  1. Open **Google Cloud Console** → create / select a project.  \n  2. Enable **Google Sheets API** under *APIs & Services*.  \n  3. Create an OAuth **Desktop** credential and connect it in n8n.  \n  4. Share the spreadsheet with the Google account linked to the credential.\n- **OpenAI**\n  1. Create a secret key at <https://platform.openai.com/account/api-keys>.  \n  2. In n8n → **Credentials** → **New** → choose **OpenAI API** and paste the key.\n- **Sample sheet to copy** (make your own copy and use its link)  \n  <https://docs.google.com/spreadsheets/d/15i9WIYpqc5lNd5T4VyM0RRptFPdi9doCbEEDn8QglN4/edit?usp=sharing>\n\n---\n\n### 1️⃣ Trigger  \n**Manual Trigger** – lets you run on demand while learning.  \n*(Swap for a Schedule or Webhook once you automate.)*\n\n---\n\n### 2️⃣ Read existing rows  \n- **Node:** `Get Rows from Google Sheets`  \n- Reads every row from **Sheet1** of your copied file.\n\n---",
+        "height": 860,
+        "width": 600,
+        "color": 5
+      },
+      "id": "2e353219-23fe-479a-84a6-51b04b5bc5de",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -224,
+        -32
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### 5️⃣ Create a description with GPT-4o  \n1. **`OpenAI Chat Model`** – uses your OpenAI credential.  \n2. **`Write description`** (AI Agent) – prompt = the **Topic**.  \n3. **`Structured Output Parser`** – forces JSON like: `{ \"description\": \"…\" }`.\n\n---\n\n### 6️⃣ Update that same row  \n- **Node:** `Update Sheets data`  \n- Operation **update**.  \n- Matches on column **Email** to update the correct line.  \n- Writes the new **Description** cell returned by GPT-4o.\n\n---\n\n### 7️⃣ Why this matters  \n- Demonstrates the three core Google Sheets operations: **read → append → update**.  \n- Shows how to enrich sheet data with an **AI step** and push the result right back.  \n- Sticky Notes provide inline docs so anyone opening the workflow understands the flow instantly.\n\n---",
+        "height": 860,
+        "width": 960,
+        "color": 4
+      },
+      "id": "5ddbd27a-6b37-4024-a5bb-0dc07ef54609",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1040,
+        -32
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### 3️⃣ Generate a demo row  \n- **Node:** `Generate 1 Row of Data` (Set node)  \n- Pretends a form was submitted:  \n  - `Name`, `Email`, `Topic`, `Submitted = \"Yes\"`\n\n---\n\n### 4️⃣ Append the new row  \n- **Node:** `Append Data to Google`  \n- Operation **append** → writes to the first empty line.\n\n---",
+        "height": 860,
+        "width": 600,
+        "color": 6
+      },
+      "id": "cba2f9d8-d6fc-4d52-b6fb-4084b8c277d4",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        416,
+        -32
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"description\": \"description\"\n}"
+      },
+      "id": "f8d974b7-f699-4eda-8834-ff104c6dbba6",
+      "name": "Structured Output Parser3",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        1424,
+        624
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {},
+      "id": "e4e90506-1f8f-4655-9c51-8767682ec426",
+      "name": "Run Workflow",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -160,
+        688
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1pFH7yxDoVW35FQpn3tO52LrH67twtsvvUvJuUOQf3KY",
+          "mode": "list",
+          "cachedResultName": "N8N_Sample Data 的副本",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pFH7yxDoVW35FQpn3tO52LrH67twtsvvUvJuUOQf3KY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pFH7yxDoVW35FQpn3tO52LrH67twtsvvUvJuUOQf3KY/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "e0d08622-4781-43ea-8228-395b8c2b255a",
+      "name": "Get Rows from Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        224,
+        528
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ebPeCzt7BrKe02Qo",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9bceded1-6f62-48a8-8727-6a6a1998d5d3",
+              "name": "Name",
+              "type": "string",
+              "value": "George Wang"
+            },
+            {
+              "id": "038dac1c-919b-4a54-b3dd-aa5723bf1f1a",
+              "name": "Email",
+              "type": "string",
+              "value": "merry.george@gmail.com"
+            },
+            {
+              "id": "e55a71f6-66d9-4da2-9dbb-0c45539c76a9",
+              "name": "Topic",
+              "type": "string",
+              "value": "50肩"
+            },
+            {
+              "id": "50999436-4b71-4ea8-b18a-bc193ab51ce9",
+              "name": "Submitted",
+              "type": "string",
+              "value": "Yes"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8a773bef-6b43-4abb-8e95-6e8fdc5cd70f",
+      "name": "Generate 1 Row of Data",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        544,
+        656
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1pFH7yxDoVW35FQpn3tO52LrH67twtsvvUvJuUOQf3KY",
+          "mode": "list",
+          "cachedResultName": "N8N_Sample Data 的副本",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pFH7yxDoVW35FQpn3tO52LrH67twtsvvUvJuUOQf3KY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pFH7yxDoVW35FQpn3tO52LrH67twtsvvUvJuUOQf3KY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.Name }}",
+            "Email": "={{ $json.Email }}",
+            "Topic": "={{ $json.Topic }}",
+            "Submitted": "={{ $json.Submitted }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Submitted",
+              "displayName": "Submitted",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "5404ee5a-830a-41b8-b53e-c467822d6700",
+      "name": "Append Data to google",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        816,
+        640
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ebPeCzt7BrKe02Qo",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Topic }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Take in the topic and write a description. "
+        }
+      },
+      "id": "760c4a44-b68b-4e7c-979f-34455a03f3c9",
+      "name": "Write description",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1296,
+        400
+      ],
+      "typeVersion": 2,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1pFH7yxDoVW35FQpn3tO52LrH67twtsvvUvJuUOQf3KY",
+          "mode": "list",
+          "cachedResultName": "N8N_Sample Data 的副本",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pFH7yxDoVW35FQpn3tO52LrH67twtsvvUvJuUOQf3KY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pFH7yxDoVW35FQpn3tO52LrH67twtsvvUvJuUOQf3KY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Description": "={{ $json.output.description }}",
+            "Name": "={{ $('Get Rows from Google Sheets').item.json.Name }}",
+            "Email": "={{ $('Get Rows from Google Sheets').item.json.Email }}",
+            "Topic": "={{ $('Get Rows from Google Sheets').item.json.Topic }}",
+            "Submitted": "={{ $('Get Rows from Google Sheets').item.json.Submitted }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Submitted",
+              "displayName": "Submitted",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "a095f531-219b-4236-9c0e-f6e7cd95d913",
+      "name": "Update Sheets data",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        1776,
+        448
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ebPeCzt7BrKe02Qo",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 📬 Need Help or Want to Customize This?\n📧 [robert@ynteractive.com](mailto:robert@ynteractive.com)  \n🔗 [LinkedIn](https://www.linkedin.com/in/robert-breen-29429625/)",
+        "width": 504
+      },
+      "id": "b790a6bc-de7f-476a-aa05-3e47bb443c86",
+      "name": "Sticky Note13",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -768,
+        -304
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 🎥 Watch This Tutorial\n\n[![Watch the video](https://img.youtube.com/vi/86mJa1aSb3Q/maxresdefault.jpg)](https://www.youtube.com/watch?v=86mJa1aSb3Q)\n\n\n## 🌐 How to Connect Google Cloud to n8n\n\n[![Watch the video](https://img.youtube.com/vi/czxMethJv8s/maxresdefault.jpg)](https://www.youtube.com/watch?v=czxMethJv8s)\n",
+        "height": 848,
+        "width": 496
+      },
+      "id": "4d65a40e-f0dc-4b4d-b776-277214c2d549",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -768,
+        -32
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1152,
+        624
+      ],
+      "id": "8c0633dc-3ea4-4b0c-930c-805b04f7d204",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "VpoJ5onkReC17BXP",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Run Workflow": {
+      "main": [
+        [
+          {
+            "node": "Get Rows from Google Sheets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate 1 Row of Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write description": {
+      "main": [
+        [
+          {
+            "node": "Update Sheets data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate 1 Row of Data": {
+      "main": [
+        [
+          {
+            "node": "Append Data to google",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser3": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Write description",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Rows from Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Write description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Write description",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2b5735d5-0d74-415a-9269-3e7cdd8cc67a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "54c4244065b6b50af90fc1c926b2fe89ffb5dfd5eedfc9251462fa6e1246afa8"
+  },
+  "nodeGroups": [],
+  "id": "bUX3NlMjlorbc5hj",
+  "tags": []
+}
